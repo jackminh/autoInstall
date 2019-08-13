@@ -1,0 +1,53 @@
+help=no
+AUTOINSTALL_PREFIX=
+AUTOINSTALL_SOURCES=
+AUTOINSTALL_TOOLS=
+AUTOINSTALL_REPOSITORY=
+opt=
+for option 
+do
+	opt="$opt `echo $option | sed -e \"s/\(--[^=]*=\)\(.* .*\)/\1'\2'/\"`"
+	case "$option" in
+		-*=*) value=`echo "$option" | sed -e 's/[-_a-zA-Z0-9]*=//'` ;;
+		   *) value="" ;;
+	esac
+	case "$option" in
+		--help)			help=yes						;;
+		--prefix=)		AUTOINSTALL_PREFIX="!"					;;
+		--prefix=*)		
+			AUTOINSTALL_PREFIX="$value" 
+			AUTOINSTALL_SOURCES="$value"/sources		
+			AUTOINSTALL_TOOLS="$value"/tools	
+			AUTOINSTALL_REPOSITORY="$value"/tools/repository
+		;;
+		*)
+		echo "$0 : error invalid option \"$option\""
+		exit 1
+		;;
+	esac
+done
+if [[ "${AUTOINSTALL_PREFIX:0:5}" != "/data" ]];then
+	AUTOINSTALL_PREFIX="/data"
+fi
+if [[ "${AUTOINSTALL_SOURCES:0:5}" != "/data" ]];then
+	AUTOINSTALL_SOURCES="/data/sources"
+fi
+if [[ "${AUTOINSTALL_TOOLS:0:5}" != "/data" ]];then
+	AUTOINSTALL_TOOLS="/data/tools"
+fi
+if [[ "${AUTOINSTALL_REPOSITORY:0:5}" != "/data" ]];then
+	AUTOINSTALL_REPOSITORY="/data/tools/repository"
+fi
+
+if [ $help = yes ];then
+cat << END
+	--help 				print this message
+	--prefix=PATH 			set installation prefix
+END
+	exit 1
+fi
+
+
+
+
+

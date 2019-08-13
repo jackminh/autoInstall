@@ -1,0 +1,9 @@
+#!/bin/sh
+LC_ALL=C
+export LC_ALL
+. auto/options
+test -d ${AUTOINSTALL_PREFIX} || mkdir -p ${AUTOINSTALL_PREFIX}
+test -d ${AUTOINSTALL_SOURCES} || mkdir -p ${AUTOINSTALL_SOURCES}
+test -d ${AUTOINSTALL_TOOLS} || mkdir -p ${AUTOINSTALL_TOOLS}
+test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
+
