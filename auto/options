@@ -3,6 +3,9 @@ AUTOINSTALL_PREFIX=
 AUTOINSTALL_SOURCES=
 AUTOINSTALL_TOOLS=
 AUTOINSTALL_REPOSITORY=
+AUTOINSTALL_PLATFORM=
+AUTOINSTALL_COMMOND=
+AUTOINSTALL_RELEASE=
 opt=
 for option 
 do
@@ -46,8 +49,49 @@ cat << END
 END
 	exit 1
 fi
+#check platform
+function getPlatformType(){
+	type=$(uname)
+	echo "Platform type: ${type}"
+	if [ ${type} == "Darwin" ];then
+		AUTOINSTALL_PLATFORM='Darwin'
+	elif [ ${type} == "Linux"  ];then
+		AUTOINSTALL_PLATFORM='Linux'
+	else
+		echo "Not support platform type: ${type}"
+	fi
+}
+getPlatformType
+#get the linux distribution
+function getLinuxDistro(){
+	if grep -Eq "Ubuntu" /etc/*-release;then
+		AUTOINSTALL_COMMOND="apt-get"
+		AUTOINSTALL_RELEASE="ubuntu"
+	elif grep -Eq "Debian" /etc/*-release;then
+		AUTOINSTALL_COMMOND="apt-get"
+		AUTOINSTALL_RELEASE="debian"
+	elif grep -Eq "CentOS" /etc/*-release;then
+		AUTOINSTALL_COMMOND="yum"
+		AUTOINSTALL_RELEASE="centos"
+	else 	
+		AUTOINSTALL_COMMOND=""
+	fi
+}
+if [[ "${AUTOINSTALL_PLATFORM}" == "Darwin" ]] ;then
+	AUTOINSTALL_COMMOND = "brew"	
+else
+	getLinuxDistro	
+fi
 
+if [[ ${AUTOINSTALL_COMMOND} == "brew" ]] || [ ${AUTOINSTALL_COMMOND} == "apt-get" ] || [ ${AUTOINSTALL_COMMOND} == "yum" ];then
+	echo "Release Version: ${AUTOINSTALL_RELEASE}"
+else
 
+cat <<END
+	This software is only supported under mac,centos,unbuntu,debian.
+END
 
+	exit 1
+fi
 
 
