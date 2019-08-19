@@ -9,4 +9,4 @@ test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
 commond_path=$(which ${AUTOINSTALL_COMMOND})
 length=$(expr length ${AUTOINSTALL_COMMOND})
 [[ ${commond_path:0-${length}} == ${AUTOINSTALL_COMMOND} ]] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
-
+. auto/package

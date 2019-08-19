@@ -1,0 +1,6 @@
+user=$(id -u)
+if [[ $user != 0 ]];then
+	echo -e "\033[42;30mPlese install with superuser\033[0m"	
+	exit 1
+fi
+
