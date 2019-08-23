@@ -5,11 +5,12 @@ if [[ $user != 0 ]];then
 fi
 ##########################################################
 #check package
-
 checkForYum(){
-	return
-
+	for elem in ${PACKAGE[@]}; do
+		echo $elem
+	done
 }
+
 case ${AUTOINSTALL_COMMOND} in
 	yum)
 		checkForYum

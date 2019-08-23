@@ -9,6 +9,16 @@ test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
 commond_path=$(which ${AUTOINSTALL_COMMOND})
 length=$(expr length ${AUTOINSTALL_COMMOND})
 [ "${commond_path:0-${length}}" == "${AUTOINSTALL_COMMOND}" ] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
+TEMPFILE=$(mktemp)
+${AUTOINSTALL_COMMOND}  update > ${TEMPFILE} 2>/dev/null
+if [ $? -ne 0 ];then
+	echo -e "\033[42;30mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
+	while read line;do
+		echo -e "$line"
+	done < ${TEMPFILE}
+	exit 1
+fi
+rm -rf ${TEMPFILE}
 #Read the dependency library configuration file
 item_lib=""
 while read line; do
@@ -25,7 +35,7 @@ while read line; do
 
 	fi
 done < lib.ini
-lib=($item_lib)
+PACKAGE=($item_lib)
 #endee
 #Read the source configuration file
 item_url=""
