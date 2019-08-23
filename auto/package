@@ -3,4 +3,28 @@ if [[ $user != 0 ]];then
 	echo -e "\033[42;30mPlese install with superuser\033[0m"	
 	exit 1
 fi
+##########################################################
+#check package
+
+checkForYum(){
+	return
+
+}
+case ${AUTOINSTALL_COMMOND} in
+	yum)
+		checkForYum
+	;;
+	apt-get)
+		checkForAptGet
+	;;
+	brew)
+		checkForBrew
+	;;
+	*)
+		echo "unsupported platform."
+		exit 1
+	;;
+esac
+
+
 

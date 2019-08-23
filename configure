@@ -8,5 +8,50 @@ test -d ${AUTOINSTALL_TOOLS} || mkdir -p ${AUTOINSTALL_TOOLS}
 test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
 commond_path=$(which ${AUTOINSTALL_COMMOND})
 length=$(expr length ${AUTOINSTALL_COMMOND})
-[[ ${commond_path:0-${length}} == ${AUTOINSTALL_COMMOND} ]] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
+[ "${commond_path:0-${length}}" == "${AUTOINSTALL_COMMOND}" ] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
+#Read the dependency library configuration file
+item_lib=""
+while read line; do
+	#section=$(expr "${line}" : '\(^\[.*+\]$\)')
+	if [ "${line:0:1}" == "#" ] ;then
+		continue
+	fi
+	section_lib=$(expr "$line" : '\(^\[.*\]$\)')
+	if [ ${#section_lib} -gt 0 ];then
+		tempStr=${section_lib:1}
+		sections_lib=${tempStr%]*}
+	else
+		item_lib=${item_lib}" "$line	
+
+	fi
+done < lib.ini
+lib=($item_lib)
+#endee
+#Read the source configuration file
+item_url=""
+while read line; do
+	#section=$(expr "${line}" : '\(^\[.*+\]$\)')
+	if [ "${line:0:1}" == "#" ] ;then
+		continue
+	fi
+	section_url=$(expr "$line" : '\(^\[.*\]$\)')
+	if [ ${#section_url} -gt 0 ];then
+		tempStr=${section_url:1}
+		sections_url=${tempStr%]*}
+	else
+		item_url=${item_url}" "$line	
+
+	fi
+done < source.ini
+url=($item_url)
+#endee
+commond_wget=$(which wget)
+[ "${commond_wget:0-4}" == "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
+if [ $? -ne 0 ];then
+	echo -e "\033[42;30mPlease install wget\033[0m"
+	exit 1
+fi
+
+
+
 . auto/package
