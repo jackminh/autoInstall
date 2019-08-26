@@ -6,9 +6,53 @@ fi
 ##########################################################
 #check package
 checkForYum(){
-	for elem in ${PACKAGE[@]}; do
-		echo $elem
+	error=0
+	for el in ${PACKAGE[@]}; do
+		if [ ${#el} -eq 0 ];then
+			continue
+		else
+			elem=$el
+		fi
+		${AUTOINSTALL_COMMOND} info installed | grep "${elem}" | grep -v grep >/dev/null 2>&1		
+		if [ $? -eq 0 ];then
+			echo "The $elem has been installed."
+		else
+			${AUTOINSTALL_COMMOND} -y install $elem 
+			if [ $? -ne 0 ];then
+				error=$(($error + 1))
+				echo -e "\033[41;34mThe $elem install failed.\033[0m"
+			fi
+		fi
 	done
+	if [ $error -gt 0 ];then
+		echo "Install the dependent packages before proceeding."
+		exit 1
+	fi
+}
+#download source
+function downloadPackage(){
+	err=0
+	dirs=$(ls -F ${AUTOINSTALL_SOURCES} | grep "/$")
+	for el in $dirs;do	
+		rm -rf ${AUTOINSTALL_SOURCES}/$el > /dev/null 2>&1
+	done
+	for source in ${SOURCEURL[@]};do
+		filename=$(find ${AUTOINSTALL_SOURCES} -type f -name ${source##*/})	
+		if [ ${#filename} -gt 0 ];then
+			echo -e "\033[42;30m${source##*/}already exists.\033[0m"
+			continue
+		fi
+		wget -P ${AUTOINSTALL_SOURCES} $source
+		if [ $? -ne 0 ];then
+			echo -e "\033[41;34mThe ${source##*/} download failed.\033[0m"
+			err=$(($err + 1))
+		fi
+	done
+	if [ $err -gt 0 ];then
+		echo "Install the dependent packages before proceeding."
+		exit 1
+	fi
+		
 }
 
 case ${AUTOINSTALL_COMMOND} in
@@ -27,5 +71,5 @@ case ${AUTOINSTALL_COMMOND} in
 	;;
 esac
 
-
+downloadPackage
 

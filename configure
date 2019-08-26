@@ -12,7 +12,7 @@ length=$(expr length ${AUTOINSTALL_COMMOND})
 TEMPFILE=$(mktemp)
 ${AUTOINSTALL_COMMOND}  update > ${TEMPFILE} 2>/dev/null
 if [ $? -ne 0 ];then
-	echo -e "\033[42;30mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
+	echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
 	while read line;do
 		echo -e "$line"
 	done < ${TEMPFILE}
@@ -53,15 +53,18 @@ while read line; do
 
 	fi
 done < source.ini
-url=($item_url)
+SOURCEURL=($item_url)
 #endee
 commond_wget=$(which wget)
 [ "${commond_wget:0-4}" == "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
 if [ $? -ne 0 ];then
-	echo -e "\033[42;30mPlease install wget\033[0m"
+	echo -e "\033[41;34mPlease install wget\033[0m"
 	exit 1
 fi
-
-
-
+commond_grep=$(which grep)
+[ "${commond_grep:0-4}" == "grep" ] || (${AUTOINSTALL_COMMOND} -y install grep >/dev/null 2&1)
+if [ $? -ne 0 ];then
+	echo -e "\033[41;34mPlease install grep\033[0m"
+	exit 1
+fi
 . auto/package
