@@ -54,6 +54,13 @@ function downloadPackage(){
 	fi
 		
 }
+#uncompress file
+function uncompress(){
+	files=$(ls ${AUTOINSTALL_SOURCES})
+	for file in $files;do
+		echo  $file
+	done
+}
 
 case ${AUTOINSTALL_COMMOND} in
 	yum)
@@ -72,4 +79,5 @@ case ${AUTOINSTALL_COMMOND} in
 esac
 
 downloadPackage
+uncompress
 
