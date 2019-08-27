@@ -17,6 +17,7 @@ do
 		-*=*) value=`echo "$option" | sed -e 's/[-_a-zA-Z0-9]*=//'` ;;
 		   *) value="" ;;
 	esac
+
 	case "$option" in
 		--help)			help=yes						;;
 		--prefix=)		AUTOINSTALL_PREFIX="!"					;;
@@ -32,16 +33,17 @@ do
 		;;
 	esac
 done
-if [[ "${AUTOINSTALL_PREFIX:0:5}" != "/data" ]];then
+
+if [ ${#AUTOINSTALL_PREFIX} -eq 0 ];then
 	AUTOINSTALL_PREFIX="/data"
 fi
-if [[ "${AUTOINSTALL_SOURCES:0:5}" != "/data" ]];then
+if [ ${#AUTOINSTALL_SOURCES} -eq 0 ];then
 	AUTOINSTALL_SOURCES="/data/sources"
 fi
-if [[ "${AUTOINSTALL_TOOLS:0:5}" != "/data" ]];then
+if [ ${#AUTOINSTALL_TOOLS} -eq 0 ];then
 	AUTOINSTALL_TOOLS="/data/tools"
 fi
-if [[ "${AUTOINSTALL_REPOSITORY:0:5}" != "/data" ]];then
+if [ ${#AUTOINSTALL_REPOSITORY} -eq 0 ];then
 	AUTOINSTALL_REPOSITORY="/data/tools/repository"
 fi
 

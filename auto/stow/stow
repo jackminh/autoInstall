@@ -1,0 +1,60 @@
+echo "#################################start to config and install stow#######################################"
+PWD=$(pwd)
+stow=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "stow*[0-9a-zA-Z]")
+if [ ${#stow} -gt 0 ];then
+	cd ${stow}
+	basename=${stow##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	./configure --prefix="${AUTOINSTALL_REPOSITORY}/${basename}"	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m stow configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make stow############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m stow make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install stow###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m stow make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				${AUTOINSTALL_REPOSITORY}/${basename}/bin/stow ${basename}
+				if [ $? -ne 0 ];then
+					echo -e "\033[41;34m stow failed.  \033[0m"	
+					exit 1
+				fi
+				#add config bash_profile	
+				echo "export PATH=${AUTOINSTALL_TOOLS}/bin:\$PATH" >> $HOME/.bash_profile	
+				echo "export LD_LIBRARY_PATH=${AUTOINSTALL_TOOLS}/lib:\$LD_LIBRARY_PATH" >> /etc/profile 	
+				cd $PWD
+				#end
+				stow_commond=$(which stow)
+				if [ ${#stow_commond} -gt 0  ];then
+					echo "##################################success to install stow#########################"
+				fi	
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m stow install failed.  \033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+

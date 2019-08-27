@@ -67,4 +67,21 @@ if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install grep\033[0m"
 	exit 1
 fi
+commond_tar=$(which tar)
+[ "${commond_tar:0-3}" == "tar" ] || (${AUTOINSTALL_COMMOND} -y install tar >/dev/null 2&1)
+if [ $? -ne 0 ];then
+	echo -e "\033[41;34mPlease install tar\033[0m"
+	exit 1
+fi
+commond_unzip=$(which unzip)
+[ "${commond_unzip:0-5}" == "unzip" ] || (${AUTOINSTALL_COMMOND} -y install unzip >/dev/null 2&1)
+if [ $? -ne 0 ];then
+	echo -e "\033[41;34mPlease install unzip\033[0m"
+	exit 1
+fi
 . auto/package
+#install software
+. auto/stow/stow
+
+
+

@@ -39,7 +39,7 @@ function downloadPackage(){
 	for source in ${SOURCEURL[@]};do
 		filename=$(find ${AUTOINSTALL_SOURCES} -type f -name ${source##*/})	
 		if [ ${#filename} -gt 0 ];then
-			echo -e "\033[42;30m${source##*/}already exists.\033[0m"
+			echo -e "\033[42;30m${source##*/} already exists.\033[0m"
 			continue
 		fi
 		wget -P ${AUTOINSTALL_SOURCES} $source
@@ -58,7 +58,25 @@ function downloadPackage(){
 function uncompress(){
 	files=$(ls ${AUTOINSTALL_SOURCES})
 	for file in $files;do
-		echo  $file
+		suffix=${file##*.}
+		case "$suffix" in
+			"gz")
+				$(tar zxvf ${AUTOINSTALL_SOURCES}/$file -C ${AUTOINSTALL_SOURCES} >/dev/null 2>&1)
+			;;
+			"zip")
+				$(unzip -t -j ${AUTOINSTALL}/$file)	
+				if [ $? -ne 0 ];then
+					echo -e "\033[41;34m $file don't unzip.\033[0m"
+				else
+					$(unzip -j ${AUTOINSTALL_SOURCES}/$file -d ${AUTOINSTALL_SOURCES} >/dev/null 2>&1)
+					
+				fi
+			;;
+			*)
+				echo -e "\033[41;34m $file error \033[0m"
+				continue
+			;;
+		esac
 	done
 }
 
