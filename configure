@@ -82,6 +82,9 @@ fi
 . auto/package
 #install software
 sh auto/stow/stow
+sh auto/zlib/zlib
+sh auto/openssl/openssl
+sh auto/pcre/pcre
 
 
 

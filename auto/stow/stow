@@ -36,6 +36,7 @@ if [ ${#stow} -gt 0 ];then
 				cd ${AUTOINSTALL_REPOSITORY}
 				${AUTOINSTALL_REPOSITORY}/${basename}/bin/stow ${basename}
 				if [ $? -ne 0 ];then
+					cd $PWD
 					echo -e "\033[41;34m stow failed.  \033[0m"	
 					exit 1
 				fi

@@ -1,0 +1,59 @@
+PWD=$(pwd)
+zlib_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "zlib*[0-9-a-zA-Z]")
+if [ ${#zlib_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${zlib_repo##*/} has been installed.\033[0m";
+	exit 1
+fi
+zlib=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "zlib*[0-9a-zA-Z]")
+echo "#################################start to config and install zlib#######################################"
+if [ ${#zlib} -gt 0 ];then
+	cd ${zlib}
+	basename=${zlib##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	./configure --prefix="${AUTOINSTALL_REPOSITORY}/${basename}"	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m zlib configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make zlib############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m zlib make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install zlib###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m zlib make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				stow ${basename}
+				if [ $? -ne 0 ];then
+					cd $PWD
+					echo -e "\033[41;34m stow zlib failed.  \033[0m"	
+					exit 1
+				fi
+				cd $PWD
+				echo "##################################success to install zlib#########################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m zlib install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+
