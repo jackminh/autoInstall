@@ -81,7 +81,7 @@ if [ $? -ne 0 ];then
 fi
 . auto/package
 #install software
-. auto/stow/stow
+sh auto/stow/stow
 
 
 
