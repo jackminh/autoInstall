@@ -1,0 +1,78 @@
+PWD=$(pwd)
+httpd_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "httpd*[0-9-a-zA-Z]")
+if [ ${#httpd_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${httpd_repo##*/} has been installed.\033[0m";
+	exit 1
+fi
+apr=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr-*[0-9a-zA-Z]")
+aprUtil=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr-util-*[0-9a-zA-Z]")
+httpd=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "httpd*[0-9a-zA-Z]")
+
+echo "#################################start to config and install httpd#######################################"
+if [ ${#httpd} -gt 0 ];then
+	if [ ${#apr} -gt 0 ];then
+		echo "cp -r ${AUTOINSTALL_SOURCES}/${apr##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr > /dev/null 2>&1"
+		cp -r ${AUTOINSTALL_SOURCES}/${apr##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr > /dev/null 2>&1
+	fi
+	if [ ${#aprUtil} -gt 0 ];then
+		echo "cp -r ${AUTOINSTALL_SOURCES}/${aprUtil##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr-util > /dev/null 2>&1"
+		cp -r ${AUTOINSTALL_SOURCES}/${aprUtil##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr-util > /dev/null 2>&1
+	fi
+	cd ${httpd}
+	basename=${httpd##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	cd ${AUTOINSTALL_SOURCES}/${basename}
+	echo $(pwd)
+	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork --with-included-apr"
+	./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork --with-included-apr 	
+	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m httpd configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make httpd############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m httpd make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install httpd###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m httpd make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				stow ${basename}
+				if [ $? -ne 0 ];then
+					cd $PWD
+					echo -e "\033[41;34m stow httpd failed.  \033[0m"	
+					exit 1
+				fi
+				cd $PWD
+				echo "ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}"
+				ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}
+				echo "##################################success to install httpd#########################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m httpd install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+

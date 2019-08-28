@@ -85,6 +85,7 @@ sh auto/stow/stow
 sh auto/zlib/zlib
 sh auto/openssl/openssl
 sh auto/pcre/pcre
+sh auto/apache/apache
 
 
 

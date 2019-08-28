@@ -58,6 +58,7 @@ function downloadPackage(){
 }
 #uncompress file
 function uncompress(){
+	echo "#########################################Unzipping the file...################################################"
 	files=$(ls ${AUTOINSTALL_SOURCES})
 	for file in $files;do
 		suffix=${file##*.}
