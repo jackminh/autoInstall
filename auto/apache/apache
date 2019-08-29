@@ -4,29 +4,105 @@ if [ ${#httpd_repo} -gt 0 -a $? -eq 0 ];then
 	echo -e "\033[42;30m ${httpd_repo##*/} has been installed.\033[0m";
 	exit 1
 fi
-apr=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr-*[0-9a-zA-Z]")
-aprUtil=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr-util-*[0-9a-zA-Z]")
+apr=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr\-[0-9].*[0-9a-zA-Z]")
+aprUtil=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr\-util\-*[0-9a-zA-Z]")
 httpd=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "httpd*[0-9a-zA-Z]")
 
-echo "#################################start to config and install httpd#######################################"
 if [ ${#httpd} -gt 0 ];then
 	if [ ${#apr} -gt 0 ];then
 		echo "cp -r ${AUTOINSTALL_SOURCES}/${apr##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr > /dev/null 2>&1"
 		cp -r ${AUTOINSTALL_SOURCES}/${apr##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr > /dev/null 2>&1
+	else
+		echo -e "\033[41;34mplease download apr package.\033[0m"
+		exit 1
 	fi
 	if [ ${#aprUtil} -gt 0 ];then
 		echo "cp -r ${AUTOINSTALL_SOURCES}/${aprUtil##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr-util > /dev/null 2>&1"
 		cp -r ${AUTOINSTALL_SOURCES}/${aprUtil##*/} ${AUTOINSTALL_SOURCES}/${httpd##*/}/srclib/apr-util > /dev/null 2>&1
+	else
+		echo -e "\033[41;34mplease download apr-util package.\033[0m"
+		exit 1
 	fi
+
+	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	echo $(pwd)
+	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	
+	echo "#################################start to config and install apr#######################################"
+	cd ${apr}	
+	baseapr=${apr##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${baseapr} ];then
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${baseapr} >/dev/null 2>&1
+	fi
+	
+	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${baseapr}"	
+	./configure --prefix=${AUTOINSTALL_REPOSITORY}/${baseapr}	
+	if [ $? -ne 0  ];then
+		echo -e "\033[41;34m apr configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make apr############################"
+		make
+		if [ $? -ne 0  ];then
+			make clean
+			echo -e "\033[41;34m apr make failed.  \033[0m"	
+			cd $PWD
+			exit 1
+		else
+			echo "#################################start to make install apr############################"
+			make install
+			if [ $? -ne 0 ];then
+				echo -e "\033[41;34m apr make install failed.  \033[0m"	
+				cd $PWD
+				exit 1
+			else
+				echo "##################################success to install apr#########################"
+			fi
+		fi
+	fi
+
+
+	echo "#################################start to config and install apr-util#######################################"
+	cd ${aprUtil}	
+	baseaprUtil=${aprUtil##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${baseaprUtil} ];then
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${baseaprUtil} >/dev/null 2>&1
+	fi
+	
+	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${baseaprUtil} --with-apr=${AUTOINSTALL_REPOSITORY}/${baseapr}"	
+	./configure --prefix=${AUTOINSTALL_REPOSITORY}/${baseaprUtil} --with-apr=${AUTOINSTALL_REPOSITORY}/${baseapr}	
+	if [ $? -ne 0  ];then
+		echo -e "\033[41;34m apr-util configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make apr-util############################"
+		make
+		if [ $? -ne 0  ];then
+			make clean
+			echo -e "\033[41;34m apr-util make failed.  \033[0m"	
+			cd $PWD
+			exit 1
+		else
+			echo "#################################start to make install apr-util############################"
+			make install
+			if [ $? -ne 0 ];then
+				echo -e "\033[41;34m apr-util make install failed.  \033[0m"	
+				cd $PWD
+				exit 1
+			else
+				echo "##################################success to install apr-util#########################"
+			fi
+		fi
+	fi
+	
+	echo "#################################start to config and install httpd#######################################"
 	cd ${httpd}
 	basename=${httpd##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
-	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
-	cd ${AUTOINSTALL_SOURCES}/${basename}
-	echo $(pwd)
-	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
 
 	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-included-apr --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork"  	
 
