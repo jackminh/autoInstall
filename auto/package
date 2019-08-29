@@ -6,6 +6,7 @@ fi
 ##########################################################
 #check package
 checkForYum(){
+	echo "#########################################check and auto download library...################################################"
 	error=0
 	for el in ${PACKAGE[@]}; do
 		if [ ${#el} -eq 0 ];then
@@ -33,6 +34,7 @@ checkForYum(){
 
 #download source
 function downloadPackage(){
+	echo "#########################################download the package...################################################"
 	err=0
 	dirs=$(ls -F ${AUTOINSTALL_SOURCES} | grep "/$")
 	for el in $dirs;do	

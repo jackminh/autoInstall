@@ -27,8 +27,10 @@ if [ ${#httpd} -gt 0 ];then
 	cd ${AUTOINSTALL_SOURCES}/${basename}
 	echo $(pwd)
 	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
-	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork --with-included-apr"
-	./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork --with-included-apr 	
+
+	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-included-apr --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork"  	
+
+	./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --enable-rewrite=shared --enable-so --enable-cgi --enable-info --enable-http --enable-proxy --enable-authn-alias --enable-authz-owner --enable-auth-digest --enable-dbd --enable-mime-magic --enable-ident --enable-authn-dbd --enable-ssl --enable-mods-shared=all --with-included-apr --with-ssl=${AUTOINSTALL_TOOLS} --with-z=${AUTOINSTALL_TOOLS} --enable-deflate --with-mpm=prefork  	
 	
 	if [ $? -ne 0 ];then
 		echo -e "\033[41;34m httpd configure failed.  \033[0m"	
@@ -60,6 +62,8 @@ if [ ${#httpd} -gt 0 ];then
 				cd $PWD
 				echo "ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}"
 				ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}
+				echo "${AUTOINSTALL_TOOLS}/lib" >> /etc/ld.so.conf
+				ldconfig
 				echo "##################################success to install httpd#########################"
 			fi
 		fi
