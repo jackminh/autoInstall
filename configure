@@ -10,7 +10,7 @@ commond_path=$(which ${AUTOINSTALL_COMMOND})
 length=$(expr length ${AUTOINSTALL_COMMOND})
 [ "${commond_path:0-${length}}" == "${AUTOINSTALL_COMMOND}" ] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
 TEMPFILE=$(mktemp)
-echo "######################################${AUTOINSTALL_COMMOND} updating .....##############################################################"
+echo "#############################${AUTOINSTALL_COMMOND} updating .....#################################"
 ${AUTOINSTALL_COMMOND}  update > ${TEMPFILE} 2>/dev/null
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
