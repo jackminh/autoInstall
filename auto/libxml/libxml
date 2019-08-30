@@ -1,0 +1,63 @@
+PWD=$(pwd)
+libxml_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "libxml*[0-9-a-zA-Z]")
+if [ ${#libxml_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${libxml_repo##*/} has been installed.\033[0m";
+	exit 2
+fi
+libxml=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "libxml*[0-9a-zA-Z]")
+echo "#################################start to config and install libxml#######################################"
+if [ ${#libxml} -gt 0 ];then
+	cd ${libxml}
+	basename=${libxml##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		echo "${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1"
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${libxml}
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	./configure --prefix="${AUTOINSTALL_REPOSITORY}/${basename}"	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m libxml configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make libxml############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m libxml make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install libxml###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m libxml make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				stow ${basename}
+				if [ $? -ne 0 ];then
+					cd $PWD
+					echo -e "\033[41;34m stow libxml failed.  \033[0m"	
+					exit 1
+				fi
+				cd $PWD
+				echo "##################################success to install libxml#########################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m libxml install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+
