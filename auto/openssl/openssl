@@ -2,7 +2,7 @@ PWD=$(pwd)
 openssl_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "openssl*[0-9-a-zA-Z]")
 if [ ${#openssl_repo} -gt 0 -a $? -eq 0 ];then
 	echo -e "\033[42;30m ${openssl_repo##*/} has been installed.\033[0m";
-	exit 1
+	exit 2 
 fi
 openssl=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "openssl*[0-9a-zA-Z]")
 echo "#################################start to config and install openssl#######################################"

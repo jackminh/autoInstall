@@ -2,7 +2,7 @@ PWD=$(pwd)
 httpd_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "httpd*[0-9-a-zA-Z]")
 if [ ${#httpd_repo} -gt 0 -a $? -eq 0 ];then
 	echo -e "\033[42;30m ${httpd_repo##*/} has been installed.\033[0m";
-	exit 1
+	exit 2
 fi
 apr=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "apr\-[0-9].*[0-9a-zA-Z]")
 echo ${apr}

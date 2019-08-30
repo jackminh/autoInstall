@@ -2,7 +2,7 @@ PWD=$(pwd)
 stow_version=$(stow -V)
 if [ ${#stow_version} -gt 0 -a $? -eq 0 ];then
 	echo -e "\033[42;30m stow has been installed.\033[0m"
-	exit 1
+	exit 2
 fi
 stow=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "stow*[0-9a-zA-Z]")
 echo "#################################start to config and install stow#######################################"
