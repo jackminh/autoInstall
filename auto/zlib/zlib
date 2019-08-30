@@ -10,6 +10,10 @@ if [ ${#zlib} -gt 0 ];then
 	cd ${zlib}
 	basename=${zlib##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		echo "${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1"
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${zlib}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
 	./configure --prefix="${AUTOINSTALL_REPOSITORY}/${basename}"	

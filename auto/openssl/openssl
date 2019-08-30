@@ -11,6 +11,9 @@ if [ ${#openssl} -gt 0 ];then
 	basename=${openssl##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
 		echo "rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1"
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${openssl}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
 	echo "./config -I${AUTOINSTALL_TOOLS}/include -L${AUTOINSTALL_TOOLS}/lib -lz  --prefix=${AUTOINSTALL_REPOSITORY}/${basename} shared zlib-dynamic"

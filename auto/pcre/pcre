@@ -11,6 +11,9 @@ if [ ${#pcre} -gt 0 ];then
 	basename=${pcre##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
 		echo "rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1"
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${pcre}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
 	echo "./configure --prefix=${AUTOINSTALL_REPOSITORY}/${basename}"	

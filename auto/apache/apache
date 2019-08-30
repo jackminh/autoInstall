@@ -102,7 +102,7 @@ if [ ${#httpd} -gt 0 ];then
 	basename=${httpd##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
 		cd ${AUTOINSTALL_REPOSITORY}
-		stow ${basename}
+		stow -D ${basename}
 		cd ${httpd}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
