@@ -81,9 +81,35 @@ fi
 . auto/package
 #install software
 sh auto/stow/stow
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m stow install failed.\033[0m"
+	exit 1
+fi
 sh auto/zlib/zlib
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m zlib install failed.\033[0m"
+	exit 1
+fi
 sh auto/openssl/openssl
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m openssl install failed.\033[0m"
+	exit 1
+fi
 sh auto/pcre/pcre
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m pcre install failed.\033[0m"
+	exit 1
+fi
+sh auto/libxml/libxml
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m libxml install failed.\033[0m"
+	exit 1
+fi
+sh auto/cmake/cmake
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m cmake install failed.\033[0m"
+	exit 1
+fi
 sh auto/apache/apache
 
 
