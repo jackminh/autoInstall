@@ -1,0 +1,84 @@
+PWD=$(pwd)
+mysql_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "mysql*[0-9-a-zA-Z]")
+if [ ${#mysql_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${mysql_repo##*/} has been installed.\033[0m";
+	exit 2
+fi
+mysql=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "mysql*[0-9a-zA-Z]")
+echo ${mysql}
+if [ ${#mysql} -gt 0 ];then
+	echo "#################################start to config and install mysql#######################################"
+	cd ${mysql}
+	basename=${mysql##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${mysql}
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	cmake -DCMAKE_INSTALL_PREFIX=${AUTOINSTALL_REPOSITORY}/${basename} .	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m mysql configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "###############################################start to make mysql################################################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m mysql make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################################start to make install mysql####################################################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m mysql make install failed.  \033[0m"	
+				exit 1
+			else
+				mkdir –p ${AUTOINSTALL_REPOSITORY}/${basename}/etc
+				if [ $? -ne 0 ];then
+					cd $PWD
+					rm -rf ${AUTOINSTALL_REPOSITORY}/${basename}
+					echo -e "\033[41;34m mysql make install failed[100].  \033[0m"	
+					exit 1
+				fi
+				cp –r ./support-files/my-default.cnf  ${AUTOINSTALL_REPOSITORY}/${basename}/etc/my.cnf
+				if [ $? -ne 0 ];then
+					cd $PWD
+					rm -rf ${AUTOINSTALL_REPOSITORY}/${basename}
+					echo -e "\033[41;34m mysql make install failed[200].  \033[0m"	
+					exit 1
+				fi
+				groupadd mysql
+				useradd -r -g mysql mysql
+				${AUTOINSTALL_REPOSITORY}/${basename}/scripts/mysql_install_db --datadir=${AUTOINSTALL_PREFIX}/mysqldb --user=mysql --basedir=${AUTOINSTALL_REPOSITORY}/${basename}			
+				if [ $? -ne 0 ];then
+					cd $PWD
+					rm -rf ${AUTOINSTALL_REPOSITORY}/${basename}
+					echo -e "\033[41;34m mysql make install failed[300].  \033[0m"	
+					exit 1
+				fi
+				mv /etc/my.cnf /etc/my.cnf_back	
+				cd ${AUTOINSTALL_REPOSITORY}
+				stow ${basename}
+				cp ${AUTOINSTALL_SOURCES}/${basename}/support-files/mysql.server /etc/init.d/mysql-5.6.15
+				chmod 755 /etc/init.d/mysql-5.6.15
+				cd $PWD
+				echo "################################################success to install mysql###############################################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m mysql install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+
