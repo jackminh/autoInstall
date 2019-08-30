@@ -27,9 +27,9 @@ if [ ${#httpd} -gt 0 ];then
 		exit 1
 	fi
 
-	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib -L${AUTOINSTALL_TOOLS}"
 	echo $(pwd)
-	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
+	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib -L${AUTOINSTALL_TOOLS}"
 	
 	echo "#################################start to config and install apr#######################################"
 	cd ${apr}	
@@ -150,6 +150,9 @@ if [ ${#httpd} -gt 0 ];then
 				line=$(grep -n "mod_slotmem_shm.so" < ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf | awk -F ":" '{print $1}')
 				echo "sed -i '${line}s/^#//g' ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf"
 				sed -i "${line}s/^#//g" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf
+				echo "grep -n "<IfModule mime_module>" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf"
+				linenum=$(grep -n "<IfModule mime_module>" < ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf)
+				sed -i "${linenum} aAddType application/x-httpd-php .php\nDirectoryIndex index.html index.php" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf
 				echo "ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}"
 				ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}
 				echo "${AUTOINSTALL_TOOLS}/lib" >> /etc/ld.so.conf

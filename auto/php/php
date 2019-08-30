@@ -1,0 +1,71 @@
+PWD=$(pwd)
+php_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "php*[0-9-a-zA-Z]")
+if [ ${#php_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${php_repo##*/} has been installed.\033[0m";
+	exit 2
+fi
+php=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "php*[0-9a-zA-Z]")
+echo ${php}
+if [ ${#php} -gt 0 ];then
+	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib -L${AUTOINSTALL_TOOLS}"
+	echo $(pwd)
+	export LDFLAGS="-Wl,-R,${AUTOINSTALL_TOOLS}/lib -L${AUTOINSTALL_TOOLS}"
+	echo "#################################start to config and install php#######################################"
+	cd ${php}
+	basename=${php##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${php}
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	
+	echo "./configure  --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --disable-debug --enable-session --with-regex=php --enable-debug=no --enable-magic-quotes --enable-mbstring --enable-safe-mode --enable-ctype --with-gettext --disable-rpath --enable-wddx=shared --enable-gd-native-ttf --with-config-file-path=${AUTOINSTALL_REPOSITORY}/${basename}/etc --with-openssl=${AUTOINSTALL_TOOLS} --with-zlib-dir=${AUTOINSTALL_TOOLS} --with-libxml-dir=${AUTOINSTALL_TOOLS} --with-apxs2=${AUTOINSTALL_TOOLS}/bin/apxs -with-mysql=${AUTOINSTALL_TOOLS} --with-pear --with-mysql-sock=${AUTOINSTALL_TOOLS}/tmp --enable-sockets --enable-zip  --with-pdo-mysql=${AUTOINSTALL_TOOLS} --with-apxs2=/bin/apxs --enable-opcache=no"
+	./configure  --prefix=${AUTOINSTALL_REPOSITORY}/${basename} --disable-debug --enable-session --with-regex=php --enable-debug=no --enable-magic-quotes --enable-mbstring --enable-safe-mode --enable-ctype --with-gettext --disable-rpath --enable-wddx=shared --enable-gd-native-ttf --with-config-file-path=${AUTOINSTALL_REPOSITORY}/${basename}/etc --with-openssl=${AUTOINSTALL_TOOLS} --with-zlib-dir=${AUTOINSTALL_TOOLS} --with-libxml-dir=${AUTOINSTALL_TOOLS} --with-apxs2=${AUTOINSTALL_TOOLS}/bin/apxs -with-mysql=${AUTOINSTALL_TOOLS} --with-pear --with-mysql-sock=${AUTOINSTALL_TOOLS}/tmp --enable-sockets --enable-zip  --with-pdo-mysql=${AUTOINSTALL_TOOLS} --with-apxs2=/bin/apxs --enable-opcache=no	
+
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m php configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make php############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m php make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install php###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m php make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				echo "cp ${AUTOINSTALL_SOURCES}/${basename}/php.ini-production ${AUTOINSTALL_REPOSITORY}/${basename}/etc/php.ini"
+				cp ${AUTOINSTALL_SOURCES}/${basename}/php.ini-production ${AUTOINSTALL_REPOSITORY}/${basename}/etc/php.ini
+				stow ${basename}
+				if [ $? -ne 0 ];then
+					cd $PWD
+					echo -e "\033[41;34m stow php failed.  \033[0m"	
+					exit 1
+				fi
+				cd $PWD
+				echo "##################################success to install php#########################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m php install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+
