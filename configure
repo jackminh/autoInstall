@@ -111,6 +111,13 @@ if [ $? -eq 1  ];then
 	exit 1
 fi
 sh auto/apache/apache
-
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m apache install failed.\033[0m"
+	exit 1
+fi
+sh auto/php/php
+if [ $? -eq 1  ];then
+	echo -e "\033[41;34m php install failed.\033[0m"
+fi
 
 

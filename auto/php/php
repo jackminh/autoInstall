@@ -28,7 +28,7 @@ if [ ${#php} -gt 0 ];then
 		cd $PWD
 		exit 1
 	else
-		echo "#################################start to make php############################"
+		echo "###############################################start to make php################################################"
 		make
 		if [ $? -ne 0 ];then
 			make clean
@@ -36,7 +36,7 @@ if [ ${#php} -gt 0 ];then
 			echo -e "\033[41;34m php make failed.  \033[0m"	
 			exit 1
 		else
-			echo "#################################start to make install php###########################"
+			echo "#################################################start to make install php####################################################"
 			make install
 			if [ $? -ne 0 ];then
 				cd $PWD
@@ -53,7 +53,7 @@ if [ ${#php} -gt 0 ];then
 					exit 1
 				fi
 				cd $PWD
-				echo "##################################success to install php#########################"
+				echo "################################################success to install php###############################################"
 			fi
 		fi
 	fi
