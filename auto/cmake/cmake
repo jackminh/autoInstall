@@ -1,0 +1,63 @@
+PWD=$(pwd)
+cmake_repo=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "cmake*[0-9-a-zA-Z]")
+if [ ${#cmake_repo} -gt 0 -a $? -eq 0 ];then
+	echo -e "\033[42;30m ${cmake_repo##*/} has been installed.\033[0m";
+	exit 2
+fi
+cmake=$(find ${AUTOINSTALL_SOURCES} -maxdepth 1 -type d -name "cmake*[0-9a-zA-Z]")
+echo "#################################start to config and install cmake#######################################"
+if [ ${#cmake} -gt 0 ];then
+	cd ${cmake}
+	basename=${cmake##*/}
+	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		echo "${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1"
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow -D ${basename}
+		cd ${cmake}
+		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
+	fi
+	./bootstrap --prefix="${AUTOINSTALL_REPOSITORY}/${basename}"	
+	if [ $? -ne 0 ];then
+		echo -e "\033[41;34m cmake configure failed.  \033[0m"	
+		cd $PWD
+		exit 1
+	else
+		echo "#################################start to make cmake############################"
+		make
+		if [ $? -ne 0 ];then
+			make clean
+			cd $PWD
+			echo -e "\033[41;34m cmake make failed.  \033[0m"	
+			exit 1
+		else
+			echo "#################################start to make install cmake###########################"
+			make install
+			if [ $? -ne 0 ];then
+				cd $PWD
+				echo -e "\033[41;34m cmake make install failed.  \033[0m"	
+				exit 1
+			else
+				cd ${AUTOINSTALL_REPOSITORY}
+				stow ${basename}
+				if [ $? -ne 0 ];then
+					cd $PWD
+					echo -e "\033[41;34m stow cmake failed.  \033[0m"	
+					exit 1
+				fi
+				cd $PWD
+				echo "##################################success to install cmake#########################"
+			fi
+		fi
+	fi
+else
+	cd $PWD
+	echo -e "\033[41;34m cmake install failed.\033[0m"	
+	exit 1
+fi
+
+
+
+
+
+
+
