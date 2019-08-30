@@ -21,6 +21,9 @@ if [ ${#httpd} -gt 0 ];then
 	cd ${httpd}
 	basename=${httpd##*/}
 	if [ -d ${AUTOINSTALL_REPOSITORY}/${basename} ];then
+		cd ${AUTOINSTALL_REPOSITORY}
+		stow ${basename}
+		cd ${httpd}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
 	echo "export LDFLAGS=-Wl,-R,${AUTOINSTALL_TOOLS}/lib"
