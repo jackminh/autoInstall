@@ -44,7 +44,7 @@ if [ ${#mysql} -gt 0 ];then
 					echo -e "\033[41;34m mysql make install failed[100].  \033[0m"	
 					exit 1
 				fi
-				cp –r ./support-files/my-default.cnf  ${AUTOINSTALL_REPOSITORY}/${basename}/etc/my.cnf
+				cp ${AUTOINSTALL_REPOSITORY}/${basename}/support-files/my-default.cnf  ${AUTOINSTALL_REPOSITORY}/${basename}/etc/my.cnf
 				if [ $? -ne 0 ];then
 					cd $PWD
 					rm -rf ${AUTOINSTALL_REPOSITORY}/${basename}
