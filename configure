@@ -4,7 +4,7 @@ export LC_ALL
 . auto/options
 id=$(id -u)
 if [ $id -ne 0  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[42;31m Make sure the current user has all permissions to the install path set to prefix. \033[0m"
 	else
 		echo -e "\033[42;31m Make sure the current user has all permissions to the install path set to prefix. \033[0m"
@@ -12,7 +12,7 @@ if [ $id -ne 0  ];then
 fi
 test -d ${AUTOINSTALL_PREFIX} || mkdir -p ${AUTOINSTALL_PREFIX}
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m The current user does not have a permission to prefix. \033[0m"
 	else
 		echo -e "\033[41;34m The current user does not have a permission to prefix. \033[0m"
@@ -32,7 +32,7 @@ echo "#######################################${AUTOINSTALL_COMMOND} updating ...
 echo "${AUTOINSTALL_COMMOND} -y  update  2>/dev/null"
 ${AUTOINSTALL_COMMOND} -y  update  2>/dev/null
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
 	else
 	        echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
@@ -79,7 +79,7 @@ SOURCEURL=(${item_url})
 commond_wget=$(which wget)
 [ "${commond_wget:0-4}" = "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34mPlease install wget\033[0m"
 	else
 		echo -e "\033[41;34mPlease install wget\033[0m"
@@ -89,7 +89,7 @@ fi
 commond_grep=$(which grep)
 [ "${commond_grep:0-4}" = "grep" ] || (${AUTOINSTALL_COMMOND} -y install grep >/dev/null 2&1)
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34mPlease install grep\033[0m"
 	else
 		echo -e "\033[41;34mPlease install grep\033[0m"
@@ -99,7 +99,7 @@ fi
 commond_tar=$(which tar)
 [ "${commond_tar:0-3}" = "tar" ] || (${AUTOINSTALL_COMMOND} -y install tar >/dev/null 2&1)
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34mPlease install tar\033[0m"
 	else
 		echo -e "\033[41;34mPlease install tar\033[0m"
@@ -109,7 +109,7 @@ fi
 commond_unzip=$(which unzip)
 [ "${commond_unzip:0-5}" = "unzip" ] || (${AUTOINSTALL_COMMOND} -y install unzip >/dev/null 2&1)
 if [ $? -ne 0 ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34mPlease install unzip\033[0m"
 	else
 		echo -e "\033[41;34mPlease install unzip\033[0m"
@@ -120,7 +120,7 @@ sh auto/package
 #install software
 sh auto/stow/stow
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m stow install failed.\033[0m"
 	else
 		echo -e "\033[41;34m stow install failed.\033[0m"
@@ -129,7 +129,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/zlib/zlib
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m zlib install failed.\033[0m"
 	else
 		echo -e "\033[41;34m zlib install failed.\033[0m"
@@ -138,7 +138,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/openssl/openssl
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m openssl install failed.\033[0m"
 	else
 		echo -e "\033[41;34m openssl install failed.\033[0m"
@@ -147,7 +147,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/pcre/pcre
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m pcre install failed.\033[0m"
 	else
 		echo -e "\033[41;34m pcre install failed.\033[0m"
@@ -156,7 +156,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/libxml/libxml
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m libxml install failed.\033[0m"
 	else
 		echo -e "\033[41;34m libxml install failed.\033[0m"
@@ -165,7 +165,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/cmake/cmake
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m cmake install failed.\033[0m"
 	else
 		echo -e "\033[41;34m cmake install failed.\033[0m"
@@ -174,7 +174,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/apache/apache
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m apache install failed.\033[0m"
 	else
 		echo -e "\033[41;34m apache install failed.\033[0m"
@@ -183,7 +183,7 @@ if [ $? -eq 1  ];then
 fi
 sh auto/mysql/mysql
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m mysql install failed.\033[0m"
 	else
 		echo -e "\033[41;34m mysql install failed.\033[0m"
@@ -193,7 +193,7 @@ fi
 
 sh auto/php/php
 if [ $? -eq 1  ];then
-	if [ "${AUTOINSTALL_COMMOND}" = "apt-get" -o "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo  "\033[41;34m php install failed.\033[0m"
 	else
 		echo -e "\033[41;34m php install failed.\033[0m"
