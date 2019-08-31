@@ -88,7 +88,7 @@ if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install unzip\033[0m"
 	exit 1
 fi
-. auto/package
+sh auto/package
 #install software
 sh auto/stow/stow
 if [ $? -eq 1  ];then
