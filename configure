@@ -22,7 +22,7 @@ if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
 	exit 1
 fi
 echo "#######################################${AUTOINSTALL_COMMOND} updating .....############################################"
-${AUTOINSTALL_COMMOND}  update  2>/dev/null
+${AUTOINSTALL_COMMOND} -y  update  2>/dev/null
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
 	exit 1
