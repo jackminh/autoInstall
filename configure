@@ -31,7 +31,6 @@ fi
 #Read the dependency library configuration file
 item_lib=""
 while read line; do
-	#section=$(expr "${line}" : '\(^\[.*+\]$\)')
 	if [ "${line:0:1}" == "#" ] ;then
 		continue
 	fi
@@ -44,16 +43,17 @@ while read line; do
 
 	fi
 done < lib.ini
-PACKAGE=($item_lib)
-#endee
+PACKAGE=(${item_lib})
+#end
+
 #Read the source configuration file
 item_url=""
 while read line; do
-	#section=$(expr "${line}" : '\(^\[.*+\]$\)')
 	if [ "${line:0:1}" == "#" ] ;then
 		continue
 	fi
-	section_url=$(expr "$line" : '\(^\[.*\]$\)')
+	#section_url=$(expr "$line" : '\(^\[.*\]$\)')
+	echo $section_url
 	if [ ${#section_url} -gt 0 ];then
 		tempStr=${section_url:1}
 		sections_url=${tempStr%]*}
@@ -62,8 +62,8 @@ while read line; do
 
 	fi
 done < source.ini
-SOURCEURL=($item_url)
-#endee
+SOURCEURL=(${item_url})
+#end
 commond_wget=$(which wget)
 [ "${commond_wget:0-4}" == "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
 if [ $? -ne 0 ];then

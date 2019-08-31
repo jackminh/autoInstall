@@ -82,13 +82,13 @@ getLinuxDistro(){
 		AUTOINSTALL_COMMOND=""
 	fi
 }
-if [[ "${AUTOINSTALL_PLATFORM}" == "Darwin" ]] ;then
+if [ "${AUTOINSTALL_PLATFORM}" == "Darwin" ] ;then
 	AUTOINSTALL_COMMOND="brew"	
 else
 	getLinuxDistro	
 fi
 
-if [[ ${AUTOINSTALL_COMMOND} == "brew" ]] || [ ${AUTOINSTALL_COMMOND} == "apt-get" ] || [ ${AUTOINSTALL_COMMOND} == "yum" ];then
+if [ ${AUTOINSTALL_COMMOND} == "brew" ] || [ ${AUTOINSTALL_COMMOND} == "apt-get" ] || [ ${AUTOINSTALL_COMMOND} == "yum" ];then
 	echo "Release Version: ${AUTOINSTALL_RELEASE}"
 else
 
