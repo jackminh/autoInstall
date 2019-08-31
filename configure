@@ -115,7 +115,7 @@ if [ $? -ne 0 ];then
 	fi
 	exit 1
 fi
-. auto/package
+sh auto/package
 #install software
 sh auto/stow/stow
 if [ $? -eq 1  ];then
