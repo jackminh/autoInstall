@@ -55,7 +55,7 @@ END
 	exit 1
 fi
 #check platform
-function getPlatformType(){
+getPlatformType(){
 	type=$(uname)
 	echo "Platform type: ${type}"
 	if [ ${type} == "Darwin" ];then
@@ -68,7 +68,7 @@ function getPlatformType(){
 }
 getPlatformType
 #get the linux distribution
-function getLinuxDistro(){
+getLinuxDistro(){
 	if grep -Eq "Ubuntu" /etc/*-release;then
 		AUTOINSTALL_COMMOND="apt-get"
 		AUTOINSTALL_RELEASE="ubuntu"
