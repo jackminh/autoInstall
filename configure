@@ -24,7 +24,6 @@ test -d ${AUTOINSTALL_TOOLS} || mkdir -p ${AUTOINSTALL_TOOLS}
 test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
 commond_path=$(which ${AUTOINSTALL_COMMOND})
 length=${#AUTOINSTALL_COMMOND}
-
 if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
 	echo "Please install the ${AUTOINSTALL_COMMOND}" 
 	exit 1
