@@ -2,14 +2,24 @@
 LC_ALL=C
 export LC_ALL
 . auto/options
+id=$(id -u)
+if [ $id -ne 0  ];then
+	echo -e "\033[41;34m please switch to root. \033[0m"
+	exit 1
+fi
 test -d ${AUTOINSTALL_PREFIX} || mkdir -p ${AUTOINSTALL_PREFIX}
 test -d ${AUTOINSTALL_SOURCES} || mkdir -p ${AUTOINSTALL_SOURCES}
 test -d ${AUTOINSTALL_TOOLS} || mkdir -p ${AUTOINSTALL_TOOLS}
 test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
 commond_path=$(which ${AUTOINSTALL_COMMOND})
-length=$(expr length ${AUTOINSTALL_COMMOND})
-[ "${commond_path:0-${length}}" == "${AUTOINSTALL_COMMOND}" ] || (echo "Please install the ${AUTOINSTALL_COMMOND}" ;exit 1)
+length=${#AUTOINSTALL_COMMOND}
+
+if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
+	echo "Please install the ${AUTOINSTALL_COMMOND}" 
+	exit 1
+fi
 echo "#######################################${AUTOINSTALL_COMMOND} updating .....############################################"
+TEMPFILE=$(mktemp)
 ${AUTOINSTALL_COMMOND}  update  2>/dev/null
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
@@ -18,6 +28,8 @@ if [ $? -ne 0 ];then
 	done < ${TEMPFILE}
 	exit 1
 fi
+rm -rf ${TEMPFILE}
+
 #Read the dependency library configuration file
 item_lib=""
 while read line; do

@@ -83,7 +83,7 @@ function getLinuxDistro(){
 	fi
 }
 if [[ "${AUTOINSTALL_PLATFORM}" == "Darwin" ]] ;then
-	AUTOINSTALL_COMMOND = "brew"	
+	AUTOINSTALL_COMMOND="brew"	
 else
 	getLinuxDistro	
 fi
