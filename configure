@@ -4,10 +4,13 @@ export LC_ALL
 . auto/options
 id=$(id -u)
 if [ $id -ne 0  ];then
-	echo -e "\033[41;34m please switch to root. \033[0m"
-	exit 1
+	echo -e "\033[42;31m Make sure the current user has all permissions to the install path set to prefix. \033[0m"
 fi
 test -d ${AUTOINSTALL_PREFIX} || mkdir -p ${AUTOINSTALL_PREFIX}
+if [ $? -ne 0 ];then
+	echo -e "\033[41;34m The current user does not have a permission to prefix. \033[0m"
+	exit 1
+fi
 test -d ${AUTOINSTALL_SOURCES} || mkdir -p ${AUTOINSTALL_SOURCES}
 test -d ${AUTOINSTALL_TOOLS} || mkdir -p ${AUTOINSTALL_TOOLS}
 test -d ${AUTOINSTALL_REPOSITORY} || mkdir -p ${AUTOINSTALL_REPOSITORY}
@@ -19,16 +22,11 @@ if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
 	exit 1
 fi
 echo "#######################################${AUTOINSTALL_COMMOND} updating .....############################################"
-TEMPFILE=$(mktemp)
 ${AUTOINSTALL_COMMOND}  update  2>/dev/null
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
-	while read line;do
-		echo -e "$line"
-	done < ${TEMPFILE}
 	exit 1
 fi
-rm -rf ${TEMPFILE}
 
 #Read the dependency library configuration file
 item_lib=""
