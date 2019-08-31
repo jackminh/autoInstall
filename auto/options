@@ -58,9 +58,9 @@ fi
 getPlatformType(){
 	type=$(uname)
 	echo "Platform type: ${type}"
-	if [ ${type} == "Darwin" ];then
+	if [ $type = "Darwin" ];then
 		AUTOINSTALL_PLATFORM='Darwin'
-	elif [ ${type} == "Linux"  ];then
+	elif [ $type = "Linux"  ];then
 		AUTOINSTALL_PLATFORM='Linux'
 	else
 		echo "Not support platform type: ${type}"
@@ -82,13 +82,13 @@ getLinuxDistro(){
 		AUTOINSTALL_COMMOND=""
 	fi
 }
-if [ "${AUTOINSTALL_PLATFORM}" == "Darwin" ] ;then
+if [ "${AUTOINSTALL_PLATFORM}" = "Darwin" ] ;then
 	AUTOINSTALL_COMMOND="brew"	
 else
 	getLinuxDistro	
 fi
 
-if [ ${AUTOINSTALL_COMMOND} == "brew" ] || [ ${AUTOINSTALL_COMMOND} == "apt-get" ] || [ ${AUTOINSTALL_COMMOND} == "yum" ];then
+if [ ${AUTOINSTALL_COMMOND} = "brew" ] || [ ${AUTOINSTALL_COMMOND} = "apt-get" ] || [ ${AUTOINSTALL_COMMOND} = "yum" ];then
 	echo "Release Version: ${AUTOINSTALL_RELEASE}"
 else
 

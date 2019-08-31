@@ -31,7 +31,7 @@ fi
 #Read the dependency library configuration file
 item_lib=""
 while read line; do
-	if [ "${line:0:1}" == "#" ] ;then
+	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
 	section_lib=$(expr "$line" : '\(^\[.*\]$\)')
@@ -49,7 +49,7 @@ PACKAGE=(${item_lib})
 #Read the source configuration file
 item_url=""
 while read line; do
-	if [ "${line:0:1}" == "#" ] ;then
+	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
 	#section_url=$(expr "$line" : '\(^\[.*\]$\)')
@@ -65,25 +65,25 @@ done < source.ini
 SOURCEURL=(${item_url})
 #end
 commond_wget=$(which wget)
-[ "${commond_wget:0-4}" == "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
+[ "${commond_wget:0-4}" = "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install wget\033[0m"
 	exit 1
 fi
 commond_grep=$(which grep)
-[ "${commond_grep:0-4}" == "grep" ] || (${AUTOINSTALL_COMMOND} -y install grep >/dev/null 2&1)
+[ "${commond_grep:0-4}" = "grep" ] || (${AUTOINSTALL_COMMOND} -y install grep >/dev/null 2&1)
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install grep\033[0m"
 	exit 1
 fi
 commond_tar=$(which tar)
-[ "${commond_tar:0-3}" == "tar" ] || (${AUTOINSTALL_COMMOND} -y install tar >/dev/null 2&1)
+[ "${commond_tar:0-3}" = "tar" ] || (${AUTOINSTALL_COMMOND} -y install tar >/dev/null 2&1)
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install tar\033[0m"
 	exit 1
 fi
 commond_unzip=$(which unzip)
-[ "${commond_unzip:0-5}" == "unzip" ] || (${AUTOINSTALL_COMMOND} -y install unzip >/dev/null 2&1)
+[ "${commond_unzip:0-5}" = "unzip" ] || (${AUTOINSTALL_COMMOND} -y install unzip >/dev/null 2&1)
 if [ $? -ne 0 ];then
 	echo -e "\033[41;34mPlease install unzip\033[0m"
 	exit 1
