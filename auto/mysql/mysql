@@ -72,6 +72,24 @@ if [ ${#mysql} -gt 0 ];then
 				stow ${basename}
 				cp ${AUTOINSTALL_SOURCES}/${basename}/support-files/mysql.server /etc/init.d/mysql-5.6.15
 				chmod 755 /etc/init.d/mysql-5.6.15
+				echo "
+log_bin=mysql-bin
+datadir = ${AUTOINSTALL_PREFIX}/mysqldb
+pid-file=${AUTOINSTALL_PREFIX}/mysqldb/DATAMASTER.pid
+port                           = 3306
+socket          = ${AUTOINSTALL_REPOSITORY}/${basename}/tmp/mysql.sock
+
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+
+max_connections=500>>${AUTOINSTALL_REPOSITORY}/${basename}/etc/my.cnf
 				cd $PWD
 				echo "################################################success to install mysql###############################################"
 			fi
