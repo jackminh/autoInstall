@@ -16,8 +16,8 @@ if [ ${#mysql} -gt 0 ];then
 		cd ${mysql}
 		rm -rf ${AUTOINSTALL_REPOSITORY}/${basename} >/dev/null 2>&1
 	fi
-	echo "cmake . -DCMAKE_INSTALL_PREFIX=${AUTOINSTALL_REPOSITORY}/${basename} -DMYSQL_UNIX_ADDR=${AUTOINSTALL_REPOSITORY}/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DEXTRA_CHARSETS=gbk,gb2312,utf8,ascii -DENABLED_LOCAL_INFILE=ON -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITHOUT_EXAMPLE_STORAGE_ENGINE=1 -DWITH_FAST_MUTEXES=1 -DWITH_ZLIB=bundled -DENABLED_LOCAL_INFILE=1 -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DWITH_DEBUG=0"
-	cmake . -DCMAKE_INSTALL_PREFIX=${AUTOINSTALL_REPOSITORY}/${basename} -DMYSQL_UNIX_ADDR=${AUTOINSTALL_REPOSITORY}/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DEXTRA_CHARSETS=gbk,gb2312,utf8,ascii -DENABLED_LOCAL_INFILE=ON -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITHOUT_EXAMPLE_STORAGE_ENGINE=1 -DWITH_FAST_MUTEXES=1 -DWITH_ZLIB=bundled -DENABLED_LOCAL_INFILE=1 -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DWITH_DEBUG=0
+	echo "cmake . -DCMAKE_INSTALL_PREFIX=${AUTOINSTALL_REPOSITORY}/${basename} -DMYSQL_DATADIR=${AUTOINSTALL_PREFIX}/mysqldb -DMYSQL_UNIX_ADDR=${AUTOINSTALL_REPOSITORY}/${basename}/tmp/mysql.sock -DWITH_EXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DMYSQL_USER=mysql -DSYSCONFDIR=${AUTOINSTALL_REPOSITORY}/${basename}/etc"
+	cmake . -DCMAKE_INSTALL_PREFIX=${AUTOINSTALL_REPOSITORY}/${basename} -DMYSQL_DATADIR=${AUTOINSTALL_PREFIX}/mysqldb -DMYSQL_UNIX_ADDR=${AUTOINSTALL_REPOSITORY}/${basename}/tmp/mysql.sock -DWITH_EXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DMYSQL_USER=mysql -DSYSCONFDIR=${AUTOINSTALL_REPOSITORY}/${basename}/etc
 	if [ $? -ne 0 ];then
 		echo -e "\033[41;34m mysql configure failed.  \033[0m"	
 		cd $PWD
@@ -52,8 +52,14 @@ if [ ${#mysql} -gt 0 ];then
 					echo -e "\033[41;34m mysql make install failed[200].  \033[0m"	
 					exit 1
 				fi
-				groupadd mysql
-				useradd -r -g mysql mysql
+				group=$(cat /etc/group | grep mysql | wc -l 2>/dev/null)
+				user=$(cat /etc/passwd | grep mysql | wc -l 2>/dev/null)
+				if [ $group -ne 1 ];then
+					groupadd mysql
+				fi
+				if [ $user -ne 1 ];then
+					useradd -r -g mysql mysql
+				fi
 				${AUTOINSTALL_REPOSITORY}/${basename}/scripts/mysql_install_db --datadir=${AUTOINSTALL_PREFIX}/mysqldb --user=mysql --basedir=${AUTOINSTALL_REPOSITORY}/${basename}			
 				if [ $? -ne 0 ];then
 					cd $PWD
