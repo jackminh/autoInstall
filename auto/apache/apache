@@ -150,8 +150,8 @@ if [ ${#httpd} -gt 0 ];then
 				line=$(grep -n "mod_slotmem_shm.so" < ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf | awk -F ":" '{print $1}')
 				echo "sed -i '${line}s/^#//g' ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf"
 				sed -i "${line}s/^#//g" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf
-				echo "grep -n "<IfModule mime_module>" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf"
-				linenum=$(grep -n "<IfModule mime_module>" < ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf)
+				echo "grep -n \"\<IfModule mime_module\>\" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf | awk -F':' '{print $1}'"
+				linenum=$(grep -n "\<IfModule mime_module\>" < ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf | awk -F':' '{print $1}')
 				sed -i "${linenum} aAddType application/x-httpd-php .php\nDirectoryIndex index.html index.php" ${AUTOINSTALL_REPOSITORY}/${basename}/conf/httpd.conf
 				echo "ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}"
 				ln -s ${AUTOINSTALL_REPOSITORY}/${basename}/bin/apachectl /etc/init.d/${basename}
