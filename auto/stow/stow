@@ -1,5 +1,5 @@
 PWD=$(pwd)
-stow_version=$(stow -V)
+stow_version=$(find ${AUTOINSTALL_REPOSITORY} -maxdepth 1 -type d -name "stow*[0-9a-zA-Z]")
 if [ ${#stow_version} -gt 0 -a $? -eq 0 ];then
 	echo -e "\033[42;30m stow has been installed.\033[0m"
 	exit 2

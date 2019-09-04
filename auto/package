@@ -6,7 +6,7 @@ fi
 ##########################################################
 #check package
 checkForYum(){
-	echo "#########################################check and auto download library...################################################"
+	echo "#####################################check and auto download library...###############################"
 	error=0
 	for el in ${PACKAGE[@]}; do
 		if [ ${#el} -eq 0 ];then
@@ -25,6 +25,7 @@ checkForYum(){
 			fi
 		fi
 	done
+	exit 1
 	if [ $error -gt 0 ];then
 		echo "Install the dependent packages before proceeding."
 		exit 1

@@ -28,7 +28,7 @@ if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
 	echo "Please install the ${AUTOINSTALL_COMMOND}" 
 	exit 1
 fi
-echo "#######################################${AUTOINSTALL_COMMOND} updating .....############################################"
+echo "############################${AUTOINSTALL_COMMOND} updating .....###################################"
 echo "${AUTOINSTALL_COMMOND} -y  update  2>/dev/null"
 ${AUTOINSTALL_COMMOND} -y  update  2>/dev/null
 if [ $? -ne 0 ];then
@@ -39,7 +39,6 @@ if [ $? -ne 0 ];then
 	fi
 	exit 1
 fi
-
 #Read the dependency library configuration file
 item_lib=""
 while read line; do
@@ -116,7 +115,15 @@ if [ $? -ne 0 ];then
 	fi
 	exit 1
 fi
-sh auto/package
+. auto/package
+if [ $? -ne 0  ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+		echo  "\033[41;34m package install failed.\033[0m"
+	else
+		echo -e "\033[41;34m package install failed.\033[0m"
+	fi
+	exit 1
+fi
 #install software
 sh auto/stow/stow
 if [ $? -eq 1  ];then
