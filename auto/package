@@ -25,7 +25,6 @@ checkForYum(){
 			fi
 		fi
 	done
-	exit 1
 	if [ $error -gt 0 ];then
 		echo "Install the dependent packages before proceeding."
 		exit 1
