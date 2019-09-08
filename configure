@@ -29,8 +29,14 @@ if [ "${commond_path:0-${length}}" != "${AUTOINSTALL_COMMOND}" ];then
 	exit 1
 fi
 echo "############################${AUTOINSTALL_COMMOND} updating .....###################################"
-echo "${AUTOINSTALL_COMMOND} -y  update  2>/dev/null"
-${AUTOINSTALL_COMMOND} -y  update  2>/dev/null
+
+if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+	echo "${AUTOINSTALL_COMMOND}  update  2>/dev/null"
+	${AUTOINSTALL_COMMOND}  update  2>/dev/null
+else
+	echo "${AUTOINSTALL_COMMOND} -y  update  2>/dev/null"
+	${AUTOINSTALL_COMMOND} -y  update  2>/dev/null
+fi
 if [ $? -ne 0 ];then
 	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
 		echo "\033[41;34mthe ${AUTOINSTALL_COMMOND} update failed,please update manually.\033[0m"
