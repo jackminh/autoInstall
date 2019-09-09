@@ -6,6 +6,7 @@ AUTOINSTALL_REPOSITORY=
 AUTOINSTALL_PLATFORM=
 AUTOINSTALL_COMMOND=
 AUTOINSTALL_RELEASE=
+AUTOINSTALL_UNINSTALL=
 
 
 
@@ -27,12 +28,21 @@ do
 			AUTOINSTALL_TOOLS="$value"/tools	
 			AUTOINSTALL_REPOSITORY="$value"/tools/repository
 		;;
+		--uninstall-path=*)
+			AUTOINSTALL_UNINSTALL="$value"
+		;;
+		
 		*)
 		echo "$0 : error invalid option \"$option\""
 		exit 1
 		;;
 	esac
 done
+
+if [ "${AUTOINSTALL_PREFIX}" = "!" ];then
+	echo "invalid parameter."
+	exit 1
+fi
 
 if [ ${#AUTOINSTALL_PREFIX} -eq 0 ];then
 	AUTOINSTALL_PREFIX="/data"
@@ -46,11 +56,16 @@ fi
 if [ ${#AUTOINSTALL_REPOSITORY} -eq 0 ];then
 	AUTOINSTALL_REPOSITORY="/data/tools/repository"
 fi
+if [ "${AUTOINSTALL_UNINSTALL}" = "" ];then
+	echo "invalid uninstall path."
+	exit 1
+fi
 
 if [ $help = yes ];then
 cat << END
 	--help 				print this message
 	--prefix=PATH 			set installation prefix
+	--uninstall-path=PATH 		set uninstall path 
 END
 	exit 1
 fi
