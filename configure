@@ -11,6 +11,15 @@ if [ $? -eq 2  ];then
 	fi
 	exit 1
 fi
+uninstall_path=$(echo $* | grep "\-\-uninstall\-path\=")
+if [ ${#uninstall_path} -gt 0 ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+		echo  "\033[42;31m invalid parameter.\033[0m"
+	else
+		echo -e "\033[42;31m invalid parameter. \033[0m"
+	fi
+	exit 1
+fi
 id=$(id -u)
 if [ $id -ne 0  ];then
 	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
