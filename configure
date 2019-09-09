@@ -2,6 +2,15 @@
 LC_ALL=C
 export LC_ALL
 . auto/options
+sh auto/uninstall
+if [ $? -eq 2  ];then
+	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
+		echo  "\033[42;31m uninstall success.\033[0m"
+	else
+		echo -e "\033[42;31m uninstall success. \033[0m"
+	fi
+	exit 1
+fi
 id=$(id -u)
 if [ $id -ne 0  ];then
 	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then

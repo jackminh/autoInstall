@@ -28,10 +28,10 @@ do
 			AUTOINSTALL_TOOLS="$value"/tools	
 			AUTOINSTALL_REPOSITORY="$value"/tools/repository
 		;;
-		--uninstall-path=*)
+		--uninstall-path=)
 			AUTOINSTALL_UNINSTALL="!"
 		;;
-		--uninstall-path=)
+		--uninstall-path=*)
 			AUTOINSTALL_UNINSTALL="$value"
 		;;
 		
@@ -123,4 +123,10 @@ export AUTOINSTALL_REPOSITORY
 export AUTOINSTALL_PLATFORM
 export AUTOINSTALL_COMMOND
 export AUTOINSTALL_RELEASE
+export AUTOINSTALL_UNINSTALL
+
+
+
+
+
 
