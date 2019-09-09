@@ -1,5 +1,5 @@
 if [ -d ${AUTOINSTALL_UNINSTALL} ] ;then
 	rm -rf ${AUTOINSTALL_UNINSTALL} > /dev/null 2>&1
+	exit 2
 fi
-exit 2
 
