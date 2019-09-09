@@ -29,6 +29,9 @@ do
 			AUTOINSTALL_REPOSITORY="$value"/tools/repository
 		;;
 		--uninstall-path=*)
+			AUTOINSTALL_UNINSTALL="!"
+		;;
+		--uninstall-path=)
 			AUTOINSTALL_UNINSTALL="$value"
 		;;
 		
@@ -56,7 +59,7 @@ fi
 if [ ${#AUTOINSTALL_REPOSITORY} -eq 0 ];then
 	AUTOINSTALL_REPOSITORY="/data/tools/repository"
 fi
-if [ "${AUTOINSTALL_UNINSTALL}" = "" ];then
+if [ "${AUTOINSTALL_UNINSTALL}" = "!" ];then
 	echo "invalid uninstall path."
 	exit 1
 fi
