@@ -73,7 +73,7 @@ function uncompress(){
 				if [ $? -ne 0 ];then
 					echo -e "\033[41;34m $file don't unzip.\033[0m"
 				else
-					$(unzip -j ${AUTOINSTALL_SOURCES}/$file -d ${AUTOINSTALL_SOURCES} >/dev/null 2>&1)
+					$(unzip ${AUTOINSTALL_SOURCES}/$file -d ${AUTOINSTALL_SOURCES} >/dev/null 2>&1)
 					
 				fi
 			;;
