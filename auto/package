@@ -69,8 +69,7 @@ function uncompress(){
 				$(tar zxvf ${AUTOINSTALL_SOURCES}/$file -C ${AUTOINSTALL_SOURCES} >/dev/null 2>&1)
 			;;
 			"zip")
-				$(unzip -t -j ${AUTOINSTALL}/$file)
-				echo "unzip -t -j ${AUTOINSTALL}/$file";
+				$(unzip -t -j ${AUTOINSTALL_SOURCES}/$file)
 				if [ $? -ne 0 ];then
 					echo -e "\033[41;34m $file don't unzip.\033[0m"
 				else
