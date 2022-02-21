@@ -43,8 +43,10 @@ if [ ${#stow} -gt 0 ];then
 				#add config bash_profile	
 				echo "export PATH=${AUTOINSTALL_TOOLS}/bin:\$PATH" >> $HOME/.bash_profile	
 				source $HOME/.bash_profile
-				echo "export LD_LIBRARY_PATH=${AUTOINSTALL_TOOLS}/lib:\$LD_LIBRARY_PATH" >> /etc/profile 	
+				echo "export LD_LIBRARY_PATH=${AUTOINSTALL_TOOLS}/lib:\$LD_LIBRARY_PATH" >> /etc/profile 
 				source /etc/profile
+				export PATH=${AUTOINSTALL_TOOLS}/bin:$PATH
+				export LD_LIBRARY_PATH=${AUTOINSTALL_TOOLS}/lib:$LD_LIBRARY_PATH
 				cd $PWD
 				#end
 				stow_commond=$(which stow)
