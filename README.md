@@ -1,1 +1,1 @@
-# automatic installation of the operating environment,do not configure task files
+automatic installation of the operating environment,do not configure task files
