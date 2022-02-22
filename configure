@@ -64,25 +64,23 @@ if [ $? -ne 0 ];then
 	exit 1
 fi
 #Read the dependency library configuration file
-item_lib=""
+echo "###############################################library list#######################################################"
 while read line; do
 	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
 	echo $line
 done < lib.ini
-PACKAGE=(${item_lib})
 #end
 
 #Read the source configuration file
-item_url=""
+echo "###############################################download package list#######################################################"
 while read line; do
 	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
 	echo $line
 done < source.ini
-SOURCEURL=(${item_url})
 #end
 commond_wget=$(which wget)
 [ "${commond_wget:0-4}" = "wget" ] || (${AUTOINSTALL_COMMOND} -y install wget >/dev/null 2&1)
