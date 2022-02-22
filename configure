@@ -141,6 +141,7 @@ if [ $? -eq 1  ];then
 	fi
 	exit 1
 fi
+source $HOME/.bash_profile
 sh auto/zlib/zlib
 if [ $? -eq 1  ];then
 	if [ "${AUTOINSTALL_COMMOND}" = "brew"   ];then
