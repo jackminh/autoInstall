@@ -62,6 +62,17 @@ else
 	echo -e "\033[41;34m php install failed.\033[0m"	
 	exit 1
 fi
+#preparations before installing the LDAP library
+ldap=$(ls /usr/lib64/libldap* | wc -l)
+if [ $ldap -gt 0 ];then
+	echo "cp -frp /usr/lib64/libldap* /usr/lib/"
+	cp -frp /usr/lib64/libldap* /usr/lib/
+else
+	cd $PWD
+	echo -e "\033[41;34m ldap library install failed.\033[0m"
+	exit 1
+fi
+
 
 
 
