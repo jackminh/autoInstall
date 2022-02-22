@@ -14,16 +14,13 @@ checkForYum(){
 		else
 			elem=$el
 		fi
-		${AUTOINSTALL_COMMOND} info installed | grep "${elem}" | grep -v grep >/dev/null 2>&1		
-		if [ $? -eq 0 ];then
-			echo "The $elem has been installed."
-		else
-			${AUTOINSTALL_COMMOND} -y install $elem 
-			if [ $? -ne 0 ];then
-				error=$(($error + 1))
-				echo -e "\033[41;34mThe $elem install failed.\033[0m"
-			fi
+		
+		${AUTOINSTALL_COMMOND} -y install $elem 
+		if [ $? -ne 0 ];then
+			error=$(($error + 1))
+			echo -e "\033[41;34mThe $elem install failed.\033[0m"
 		fi
+		
 	done
 	if [ $error -gt 0 ];then
 		echo "Install the dependent packages before proceeding."
