@@ -69,14 +69,7 @@ while read line; do
 	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
-	section_lib=$(expr "$line" : '\(^\[.*\]$\)')
-	if [ ${#section_lib} -gt 0 ];then
-		tempStr=${section_lib:1}
-		sections_lib=${tempStr%]*}
-	else
-		item_lib=${item_lib}" "$line	
-
-	fi
+	echo $line
 done < lib.ini
 PACKAGE=(${item_lib})
 #end
@@ -87,15 +80,7 @@ while read line; do
 	if [ "${line:0:1}" = "#" ] ;then
 		continue
 	fi
-	section_url=$(expr "$line" : '\(^\[.*\]$\)')
-	echo $section_url
-	if [ ${#section_url} -gt 0 ];then
-		tempStr=${section_url:1}
-		sections_url=${tempStr%]*}
-	else
-		item_url=${item_url}" "$line	
-
-	fi
+	echo $line
 done < source.ini
 SOURCEURL=(${item_url})
 #end
